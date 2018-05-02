@@ -36,8 +36,6 @@ export interface AzResponseConfig {
   facetFromAccessor: string;
   facetToAccessor: string;
   valueAccessor: string;
-  highlightAccessor: string;
-  highlightTextAccessor: string;
 }
 
 export const defaultAzResponseConfig: AzResponseConfig = {
@@ -50,6 +48,4 @@ export const defaultAzResponseConfig: AzResponseConfig = {
   facetFromAccessor: "from",
   facetToAccessor: "to",
   valueAccessor: "value",
-  highlightAccessor: "@search.highlights",
-  highlightTextAccessor: "text",
 }

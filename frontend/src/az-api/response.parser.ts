@@ -43,5 +43,3 @@ export const parseResponse = async (response: Response, config: AzResponseConfig
     facets: parseResponseFacetObject(jsonObject[config.facetsAccessor], config),
   };
 };
-
-
