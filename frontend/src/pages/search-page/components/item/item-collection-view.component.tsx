@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ItemComponent } from "./item.component";
 import { ItemCollection, Item } from "../../view-model";
-import { cnc, getUniqueStrings } from "../../../../util";
+import { cnc } from "../../../../util";
 
 const style = require("./item-collection-view.style.scss");
 
@@ -19,10 +19,6 @@ export class ItemCollectionViewComponent extends React.Component<ItemViewProps, 
     super(props);
   }
   
-  private injectHighlightWords = (targetWords: string[], highlightWords: string[]): string[] => {
-    return getUniqueStrings([...targetWords, ...highlightWords]);
-  }
-  
   public render() {
     return (    
       <div className={cnc(style.container, this.props.listMode && style.containerList)}>
@@ -32,7 +28,7 @@ export class ItemCollectionViewComponent extends React.Component<ItemViewProps, 
               item={child}
               listMode={this.props.listMode}
               activeSearch={this.props.activeSearch}
-              targetWords={this.injectHighlightWords(this.props.targetWords, child.highlightWords)}
+              targetWords={this.props.targetWords}
               onClick={this.props.onClick}
               key={index}
             />

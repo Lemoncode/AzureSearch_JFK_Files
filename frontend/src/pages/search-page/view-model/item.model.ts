@@ -8,7 +8,6 @@ export interface Item {
   metadata?: any;
   demoInitialPage?: number;
   type?: string;
-  highlightWords: string[];
 }
 
 export type ItemCollection = Item[];

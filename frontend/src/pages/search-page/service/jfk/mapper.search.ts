@@ -1,4 +1,4 @@
-import { isArrayEmpty, isValueInArray, getUniqueStrings } from "../../../../util";
+import { isArrayEmpty, isValueInArray } from "../../../../util";
 import { ServiceConfig } from "../../service";
 import {
   AzResponse,
@@ -9,8 +9,7 @@ import {
   AzFilter,
   AzFilterGroup,
   AzFilterCollection,
-  AzFilterSingle,
-  AzResponseConfig,
+  AzFilterSingle
 } from "../../../../az-api";
 import {
   Item,
@@ -23,7 +22,6 @@ import {
   Filter,
 } from "../../view-model";
 
-
 // [Search] FROM AzApi response TO view model.
 
 const mapImgUrlInMetadata = (metadata: string) => {
@@ -31,45 +29,7 @@ const mapImgUrlInMetadata = (metadata: string) => {
   return captures && captures.length ? captures[1] : "";
 };
 
-const extractHighlightWords = (accumulator: string[], line: string): string[] => {
-  const regexp = new RegExp('<em>(.+?)<\/em>','g');
-  return regexp.test(line) ? 
-    [
-      ...accumulator,
-      ...line.match(regexp)
-    ] :
-    accumulator;
-};
-
-const cleanHighlightWords = (words: string[]): string[] => {
-  return words.map(word => (
-    word.replace('<em>', '').replace('</em>', '').toLowerCase()
-  ));
-};
-
-const mapHighlightWords = (rawHighlights: string[]): string[] => {
-  const highlightWords = rawHighlights.reduce(extractHighlightWords, []);
-  const cleanedHighlightWords = cleanHighlightWords(highlightWords);
-  return getUniqueStrings(cleanedHighlightWords);
-}
-
-const checkHightlightWordsAvailable = (result: any, responseConfig: AzResponseConfig) => (
-  Boolean(result) &&
-  Boolean(responseConfig) &&
-  Boolean(result[responseConfig.highlightAccessor]) &&
-  Boolean(result[responseConfig.highlightAccessor][responseConfig.highlightTextAccessor])
-)
-
-const getHighlightWords = (result: any, responseConfig: AzResponseConfig): string[] => {
-  if (checkHightlightWordsAvailable(result, responseConfig)) {
-    const rawHightlights = result[responseConfig.highlightAccessor][responseConfig.highlightTextAccessor];
-    return mapHighlightWords(rawHightlights);
-  } else {
-    return [];
-  }
-}
-
-const mapResultToItem = (result: any, responseConfig: AzResponseConfig): Item => {
+const mapResultToItem = (result: any): Item => {
   return result ? {
     title: result.id,
     subtitle: "",
@@ -82,12 +42,11 @@ const mapResultToItem = (result: any, responseConfig: AzResponseConfig): Item =>
       result.demoInitialPage :
       undefined,
     type: result.type,
-    highlightWords: getHighlightWords(result, responseConfig),
   } : null;
 };
 
-const mapSearchResponseForResults = (response: AzResponse, responseConfig: AzResponseConfig): ItemCollection => {
-  return isArrayEmpty(response.value) ? null : response.value.map(r => mapResultToItem(r, responseConfig));
+const mapSearchResponseForResults = (response: AzResponse): ItemCollection => {
+  return isArrayEmpty(response.value) ? null : response.value.map(r => mapResultToItem(r));
 };
 
 const mapResponseFacetValueToViewFacetValue = (responseFacetValue: AzResponseFacetValue): FacetValue => {
@@ -124,7 +83,7 @@ export const mapSearchResponseToState = (state: State, response: AzResponse, con
   return {
     ...state,
     resultCount: response.count,
-    itemCollection: mapSearchResponseForResults(response, config.searchConfig.responseConfig),
+    itemCollection: mapSearchResponseForResults(response),
     facetCollection: mapSearchResponseForFacets(response, viewFacets),
   }
 };
