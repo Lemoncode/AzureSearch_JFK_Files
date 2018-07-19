@@ -31,12 +31,12 @@ const mapImgUrlInMetadata = (metadata: string) => {
 
 const mapResultToItem = (result: any): Item => {
   return result ? {
-    title: result.id,
+    title: result.fileName,
     subtitle: "",
     thumbnail: mapImgUrlInMetadata(result.metadata),
     excerpt: "",
     rating: 0,
-    extraFields: [result.tags],
+    extraFields: [result.entities],
     metadata: result.metadata,
     demoInitialPage: Boolean(result.demoInitialPage) ?
       result.demoInitialPage :
